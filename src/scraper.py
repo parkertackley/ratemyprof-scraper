@@ -1,13 +1,15 @@
 import requests
 from bs4 import BeautifulSoup
-import json
 import re
 
 def scraper(url):
-    # making a GET request
-    req = requests.get(url)
-    if req.status_code != 200:
-        raise Exception("Failed to load page")
+
+    try:
+        # making a GET request
+        req = requests.get(url)
+        req.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print("Cannot reach, request error: {e}")
 
     print(req)
 
@@ -33,7 +35,7 @@ def scraper(url):
         href = schoolName['href']
         schoolNum = re.findall(r'/school/(\d+)', href)
 
-    # Get would take again and level of difficulty scores
+    # Get would take again and level of difficulty 
     wtalodList = []
     for entry in wtalod:
         wtalodList.append(entry.text)
@@ -48,6 +50,7 @@ def scraper(url):
     }
 
     print(jsonEntry)
+    return jsonEntry
 
 # Alphonce
 # scraper('https://www.ratemyprofessors.com/professor/17342')
@@ -59,4 +62,6 @@ def scraper(url):
 # scraper('https://www.ratemyprofessors.com/professor/1434280')
 
 # John Walsh (USC)
-scraper("https://www.ratemyprofessors.com/professor/2422438")
+# scraper("https://www.ratemyprofessors.com/professor/2422438")
+
+# scraper("https://www.ratemyprofessors.com/professor/1736675")
